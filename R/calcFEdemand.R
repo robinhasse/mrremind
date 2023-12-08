@@ -666,7 +666,9 @@ calcFEdemand <- function(subtype = "FE", use_ODYM_RECC = FALSE) {
 
     # remove missing Navigate scenarios
     if (subtype %in% c("FE_buildings", "UE_buildings")) {
-      reminditems <- reminditems[, , grep("SSP2EU_(NAV|CAMP)_[a-z]*\\.rcp", getItems(reminditems, 3), value = TRUE), invert = TRUE]
+      reminditems <- reminditems[, , grep("SSP2EU_(NAV|CAMP)_[a-zA-Z_]+\\.rcp",
+                                          getItems(reminditems, 3), value = TRUE),
+                                 invert = TRUE]
     }
 
     #Change the scenario names for consistency with REMIND sets
