@@ -17,6 +17,7 @@ fullREMIND <- function() {
   rem_years_hist <- seq(1990, 2150, 5)
   gdpPopScen <- c("SSPs", "SSP2IndiaDEAs")
   feDemScen <- c(gdpPopScen, "SSP2_lowEn", "SSP2_highDemDEU", "SSP2_NAV_all")
+  feDemScenBuild <- c(feDemScen, "SSP2_GP")
 
   #-------------- macro-economic parameters -----------------------------------------------------------
   calcOutput("Population", scenario = gdpPopScen, years = rem_years_hist, round = 8, file = "f_pop.cs3r")
@@ -55,12 +56,12 @@ fullREMIND <- function() {
     match.steel.estimates = "IEA_ETP"
   )
 
-  calcOutput("FeDemandIndustry", scenarios = feDemScen, signif = 4, file = "f_fedemandInd.cs4r")
-  calcOutput("FeDemandBuildings", subtype = "FE", scenario = feDemScen, round = 8, file = "f_fedemandBuild.cs4r")
-  calcOutput("FeDemandBuildings", subtype = "UE", scenario = feDemScen, round = 8, file = "f36_uedemand_build.cs4r")
+  calcOutput("FeDemandIndustry", scenarios = feDemScenBuild, signif = 4, file = "f_fedemandInd.cs4r")
+  calcOutput("FeDemandBuildings", subtype = "FE", scenario = feDemScenBuild, round = 8, file = "f_fedemandBuild.cs4r")
+  calcOutput("FeDemandBuildings", subtype = "UE", scenario = feDemScenBuild, round = 8, file = "f36_uedemand_build.cs4r")
   calcOutput("ChemicalFeedstocksShare",                     round = 2, file = "p37_chemicals_feedstock_share.cs4r")
-  calcOutput("Floorspace", scenario = feDemScen, onlyTotal = TRUE, round = 1, file = "p36_floorspace_scen.cs4r")
-  calcOutput("Floorspace", scenario = feDemScen,            round = 1, file = "f36_floorspace_scen.cs4r")
+  calcOutput("Floorspace", scenario = feDemScenBuild, onlyTotal = TRUE, round = 1, file = "p36_floorspace_scen.cs4r")
+  calcOutput("Floorspace", scenario = feDemScenBuild,       round = 1, file = "f36_floorspace_scen.cs4r")
   calcOutput("IntertempElastSubst",                         round = 6, file = "pm_ies.cs4r")
   calcOutput("TimePref",                                    round = 6, file = "p23_prtp.cs4r")
   calcOutput("CO2Prices",                                   round = 2, file = "pm_taxCO2eqHist.cs4r")
@@ -139,9 +140,9 @@ fullREMIND <- function() {
   calcOutput("StorageFactor",                                          round = 6,  file = "f32_factorStorage.cs4r")
   calcOutput("ExpertGuess", subtype = "gridFactor",                    round = 6,  file = "p32_grid_factor.cs4r")
   # Pass the same scenarios to FEShares as to FEDemand to optimize madrat cache usage.
-  calcOutput("FEShares", subtype = "ind_coal", scenario = feDemScen,   round = 5,  file = "p_share_ind_fesos.cs4r")
-  calcOutput("FEShares", subtype = "ind_bio", scenario = feDemScen,    round = 5,  file = "p_share_ind_fesos_bio.cs4r")
-  calcOutput("FEShares", subtype = "ind_liq", scenario = feDemScen,    round = 5,  file = "p11_share_ind_fehos.cs4r")
+  calcOutput("FEShares", subtype = "ind_coal", scenario = feDemScenBuild,   round = 5,  file = "p_share_ind_fesos.cs4r")
+  calcOutput("FEShares", subtype = "ind_bio", scenario = feDemScenBuild,    round = 5,  file = "p_share_ind_fesos_bio.cs4r")
+  calcOutput("FEShares", subtype = "ind_liq", scenario = feDemScenBuild,    round = 5,  file = "p11_share_ind_fehos.cs4r")
   calcOutput("Solar",                                                  round = 5,  file = "f_dataRegiSolar.cs3r")
   calcOutput("CapacityNuclear",                                        round = 5,  file = "pm_NuclearConstraint.cs4r")
   calcOutput("CCScapacity", subtype = "pipeline",                      round = 8,  file = "p_boundCapCCS.cs4r")
@@ -191,7 +192,7 @@ fullREMIND <- function() {
   calcOutput("CapTarget", sources = "NewClimate", round = 4, file = "f40_NewClimate.cs3r")
 
   # renewable share targets from NewClimate protocol
-  calcOutput("RenShareTargets", scenario = feDemScen, round = 4, file = "f40_RenShareTargets.cs3r")
+  calcOutput("RenShareTargets", scenario = feDemScenBuild, round = 4, file = "f40_RenShareTargets.cs3r")
 
   # specific renewable share targets only used for EU in techpol NDCplus realization
   calcOutput("SharedTarget", subtype = "FErenewablesShare", round = 3, file = "f40_FE_RenShare.cs4r")
