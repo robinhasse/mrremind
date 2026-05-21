@@ -6,12 +6,20 @@
 These energy projections are used in the input data preparation for aggregating country-specific data to REMIND regions.
 They are a country-level proxy of the final energy demand trajectories on the level of REMIND regions provided by the EDGE models.}
 \usage{
-toolCalcEnergyProj(subtype, subset, scenario, years = seq(2020, 2050, 5))
+toolCalcEnergyProj(
+  subtype,
+  gdpScen,
+  demScen,
+  scenario,
+  years = seq(2020, 2050, 5)
+)
 }
 \arguments{
 \item{subtype}{"FE" (Total final energy consumption), "SE|Electricity" (SE electricity generation)}
 
-\item{subset}{GDP scenario to use}
+\item{gdpScen}{GDP scenario to use}
+
+\item{demScen}{demand scenario to use}
 
 \item{scenario}{set of GDP scenarios to use for calcFeDemandBuildings and calcFeDemandIndustry
 calculation (trigger standard cache in this function)}

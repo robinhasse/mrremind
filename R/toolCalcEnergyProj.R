@@ -4,13 +4,14 @@
 #'
 #' @author Felix Schreyer
 #' @param subtype "FE" (Total final energy consumption), "SE|Electricity" (SE electricity generation)
-#' @param subset GDP scenario to use
+#' @param gdpScen GDP scenario to use
+#' @param demScen demand scenario to use
 #' @param scenario set of GDP scenarios to use for calcFeDemandBuildings and calcFeDemandIndustry
 #' calculation (trigger standard cache in this function)
 #' @param years target years for projection
 #' @seealso [convertNewClimate()]
 
-toolCalcEnergyProj <- function(subtype, subset, scenario, years = seq(2020, 2050, 5)) {
+toolCalcEnergyProj <- function(subtype, gdpScen, demScen, scenario, years = seq(2020, 2050, 5)) {
   # This function projects FE demand and SE electricity generation on country-level to future years based on a FE and GDP trend approach:
   #
   # Energy(targetYear) = Energy(2020) * [ FE(REMINDregion,targetYear) / FE(REMINDregion,2020)
@@ -56,18 +57,18 @@ toolCalcEnergyProj <- function(subtype, subset, scenario, years = seq(2020, 2050
   }
 
   # function to calculate FE trend on level of REMIND regions based on EDGE data
-  .computeFeTrend <- function(subtype, subset, years) {
+  .computeFeTrend <- function(subtype, gdpScen, demScen, years) {
 
     # get FE demand projections per REMIND region for transport, buildings and industry for SSP2
     # transport FE demand from EDGE-T (in TWa/yr)
     FETransport <- calcOutput("EDGETransport", subtype = "f35_demByTech")
     # filter for SSP2 scenario and Mix1 EDGE scenario
-    FETransport <- collapseNames(mselect(FETransport, GDP_scenario = subset, DEM_scenario = subset, EDGE_scenario = "Mix1"))
+    FETransport <- collapseNames(mselect(FETransport, GDP_scenario = gdpScen, DEM_scenario = demScen, EDGE_scenario = "Mix1"))
 
     # buildings and industry FE demand from EDGE-B and EDGE-I (in EJ/yr)
-    FEBuild <- calcOutput("FeDemandBuildings", subtype = "FE", scenario = scenario, signif = 4)[, , subset][, , "none"] %>%
+    FEBuild <- calcOutput("FeDemandBuildings", subtype = "FE", scenario = scenario, signif = 4)[, , demScen][, , "none"] %>%
       collapseNames()
-    FEIndustry <- calcOutput("FeDemandIndustry", scenarios = scenario, signif = 4)[, , subset]
+    FEIndustry <- calcOutput("FeDemandIndustry", scenarios = scenario, signif = 4)[, , demScen]
 
     # define CES inputs over which to sum for respective FE demand
     if (subtype == "FE") {
@@ -111,11 +112,11 @@ toolCalcEnergyProj <- function(subtype, subset, scenario, years = seq(2020, 2050
   }
 
   # function to calculate difference in GDP trend between country and REMIND region
-  .computeGDPTrendDiff <- function(subset, years, MaxThreshold) {
+  .computeGDPTrendDiff <- function(gdpScen, years, MaxThreshold) {
     # GDP on country-level
-    GDP_country <- calcOutput("GDP", scenario = subset, years = years, aggregate = FALSE)
+    GDP_country <- calcOutput("GDP", scenario = gdpScen, years = years, aggregate = FALSE)
     # GDP on REMIND region-level
-    GDP_region <- calcOutput("GDP", scenario = subset, years = years)
+    GDP_region <- calcOutput("GDP", scenario = gdpScen, years = years)
     # get regionmapping
     mapping <- toolGetMapping(getConfig("regionmapping"), type = "regional", where = "mappingfolder")
     # assign REMIND GDP trend to all countries within this region to be able to subtract region GDP trend from country GDP trend
@@ -136,9 +137,9 @@ toolCalcEnergyProj <- function(subtype, subset, scenario, years = seq(2020, 2050
   # 1. get historical energy data for 2020 ----
   xHist <- .getHistData(subtype, AvgSeveralYears = TRUE)
   # 2. calculate FE trend on level of REMIND regions based on EDGE data ----
-  FeTrend <- .computeFeTrend(subtype, subset, years)
+  FeTrend <- .computeFeTrend(subtype, gdpScen, demScen, years)
   # 3. calculate difference in GDP trend between country and REMIND region ----
-  GDPTrendDiff <- .computeGDPTrendDiff(subset, years, MaxThreshold = 0.3)
+  GDPTrendDiff <- .computeGDPTrendDiff(gdpScen, years, MaxThreshold = 0.3)
 
   # 4. project energy according to above formula ----
   x <- xHist * (FeTrend + GDPTrendDiff)

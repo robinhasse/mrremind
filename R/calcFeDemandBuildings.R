@@ -18,6 +18,7 @@ calcFeDemandBuildings <- function(subtype, scenario) {
 
   ## Replace any calls to scenario groups such as "SSPs" and "SSP2IndiaDEAs", to calls of the individual scenarios.
   scenario <- mrdrivers::toolReplaceShortcuts(scenario) %>% unique()
+  scenario <- setdiff(scenario, "SSP2")
 
   # Data Processing ----
   ononspec <- calcOutput("FeDemandONONSPEC", scenario = scenario, eoh = eoh, aggregate = FALSE)

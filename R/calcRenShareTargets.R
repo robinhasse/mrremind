@@ -419,8 +419,8 @@ calcRenShareTargets <- function(scenario) {
   TotalsEnergyProj <- new.magpie(getItems(x, dim = 1), getItems(x, dim = 2), getNames(x), fill = NA)
   # get projections of energy use in target years
 
-  TotalsEnergyProj[, , "RenFE"] <- toolCalcEnergyProj(subtype = "FE", subset = "SSP2", scenario = scenario)
-  TotalsEnergyProj[, , "RenElec"] <- toolCalcEnergyProj(subtype = "SE|Electricity", subset = "SSP2",  scenario = scenario)
+  TotalsEnergyProj[, , "RenFE"] <- toolCalcEnergyProj(subtype = "FE", gdpScen = "SSP2", demScen = "SSP2_GP", scenario = scenario)
+  TotalsEnergyProj[, , "RenElec"] <- toolCalcEnergyProj(subtype = "SE|Electricity", gdpScen = "SSP2", demScen = "SSP2_GP", scenario = scenario)
   # for non-biomass renewable share in electricity and non-fossil share in electricity the total is both SE electricity,
   # the same as for the renewable share in electricity
   TotalsEnergyProj[, , "NonBioRenElec"] <- TotalsEnergyProj[, , "RenElec"]
