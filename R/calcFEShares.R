@@ -33,12 +33,12 @@ calcFEShares <- function(subtype, scenario) {
     ## Keep scenario selection as is (this optimizes madrat cache usage).
 
     fe_dem_build <- calcOutput("FeDemandBuildings", subtype = "FE", scenario = scenario, aggregate = FALSE)
-    fe_dem_ind <- calcOutput("FeDemandIndustry",  scenarios = scenario, aggregate = FALSE)[, , "SSP2"]
+    fe_dem_ind <- calcOutput("FeDemandIndustry_GP",  scenarios = scenario, aggregate = FALSE)[, , "SSP2_GP"]
 
     fehoi <- dimSums(fe_dem_ind[, 2005, c("feli_cement", "feli_chemicals", "feli_steel", "feli_otherInd")], dim = 3)
 
-    share <- fehoi / (fehoi + fe_dem_build[, 2005, "SSP2.none.fehob"])
-    weight <- (fehoi + fe_dem_build[, 2005, "SSP2.none.fehob"])
+    share <- fehoi / (fehoi + fe_dem_build[, 2005, "SSP2_GP.none.fehob"])
+    weight <- (fehoi + fe_dem_build[, 2005, "SSP2_GP.none.fehob"])
     descr <- "share of stationary heating oil used in industry"
   }
 

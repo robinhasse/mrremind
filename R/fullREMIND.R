@@ -56,7 +56,7 @@ fullREMIND <- function() {
     match.steel.estimates = "IEA_ETP"
   )
 
-  calcOutput("FeDemandIndustry", scenarios = feDemScenBuild, signif = 4, file = "f_fedemandInd.cs4r")
+  calcOutput("FeDemandIndustry_GP", scenarios = feDemScenBuild, signif = 4, file = "f_fedemandInd.cs4r")
   calcOutput("FeDemandBuildings", subtype = "FE", scenario = feDemScenBuild, round = 8, file = "f_fedemandBuild.cs4r")
   calcOutput("FeDemandBuildings", subtype = "UE", scenario = feDemScenBuild, round = 8, file = "f36_uedemand_build.cs4r")
   calcOutput("ChemicalFeedstocksShare",                     round = 2, file = "p37_chemicals_feedstock_share.cs4r")
